@@ -1,28 +1,45 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { addExpense } from "../src/services/api";
 
 const AddExpenseModal = ({ show, handleClose }) => {
   const [expense, setExpense] = useState({
     title: "",
     amount: "",
     category: "",
-    type: "Expense",
+    type: "expense",
     date: "",
     description: "",
   });
-
+  
+  const [error, setError] = useState(null);
   const handleChange = (e) => {
     setExpense({ ...expense, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Expense Added:", expense);
-    handleClose();
+    try {
+      const formattedExpense = {
+        ...expense,
+        amount: parseFloat(expense.amount), // ✅ Ensure amount is a number
+        type: expense.type.toLowerCase(), // ✅ Convert type to lowercase
+      };
+      const data = await addExpense(formattedExpense);
+      console.log("Expense Added:", data);
+      alert("Transaction Added Successfully!");
+      setExpense({ title: "", amount: "", category: "", type: "expense", date: "", description: "" }); // ✅ Reset form
+      handleClose();
+    } catch (err) {
+      setError(err.error || "Failed to add expense");
+    }
   };
+
+  
 
   return (
     <>
+      {error && <p className="text-danger">{error}</p>}
       {show && <div className="modal-backdrop fade show"></div>}
       <div className={`modal ${show ? "d-block" : "d-none"}`} tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered">
