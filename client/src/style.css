@@ -1,0 +1,18 @@
+.auth-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; 
+    margin-top: 10px;
+  }
+  
+  .auth-buttons .btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    gap: 5px;
+    min-width: 120px; 
+  }
+  
